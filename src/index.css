@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-main: #030507;
+    --bg-secondary: #050A12;
+    --bg-card: #080D17;
+    --accent-electric: #00A8FF;
+    --accent-blue: #008CFF;
+    --accent-amber: #FFB45C;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: #030507;
+    color: #F8FAFC;
+  }
+
+  /* Custom Sleek Dark Scrollbar */
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #030507;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #141E34;
+    border-radius: 9999px;
+    border: 1px solid rgba(0, 168, 255, 0.15);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #008CFF;
+  }
+}
+
+@layer utilities {
+  .text-glow-cyan {
+    text-shadow: 0 0 20px rgba(0, 168, 255, 0.6), 0 0 40px rgba(0, 140, 255, 0.3);
+  }
+
+  .text-glow-amber {
+    text-shadow: 0 0 15px rgba(255, 180, 92, 0.5);
+  }
+
+  .glass-panel {
+    background: rgba(8, 13, 23, 0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .glass-card-hover {
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .glass-card-hover:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0, 168, 255, 0.35);
+    box-shadow: 0 12px 30px -10px rgba(0, 168, 255, 0.2);
+  }
+
+  .cyan-border-glow {
+    box-shadow: 0 0 0 1px rgba(0, 168, 255, 0.3), 0 0 20px -5px rgba(0, 168, 255, 0.4);
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Rolling Infinite Marquee */
+  @keyframes marquee-scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-marquee {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll 38s linear infinite;
+    will-change: transform;
+  }
+
+  .animate-marquee-slow {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll 55s linear infinite;
+    will-change: transform;
+  }
+
+  .marquee-container:hover .animate-marquee,
+  .marquee-container:hover .animate-marquee-slow {
+    animation-play-state: paused;
+  }
+}
