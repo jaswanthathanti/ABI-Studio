@@ -43,16 +43,20 @@ export function App() {
       <Footer />
 
       {/* Interactive Global Modals */}
-      <QuoteModal
-        isOpen={isQuoteOpen}
-        onClose={() => setIsQuoteOpen(false)}
-        initialService={quoteInitialService}
-      />
+      {isQuoteOpen && (
+        <QuoteModal
+          isOpen={isQuoteOpen}
+          onClose={() => setIsQuoteOpen(false)}
+          initialService={quoteInitialService}
+        />
+      )}
 
-      <ShowreelModal
-        isOpen={isShowreelOpen}
-        onClose={() => setIsShowreelOpen(false)}
-      />
+      {isShowreelOpen && (
+        <ShowreelModal
+          isOpen={isShowreelOpen}
+          onClose={() => setIsShowreelOpen(false)}
+        />
+      )}
 
       {/* Floating Circular WhatsApp Contact Button */}
       <WhatsAppButton />

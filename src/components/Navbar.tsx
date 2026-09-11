@@ -39,16 +39,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuote }) => {
         { label: 'Contact', href: '/#cta', type: 'route' as const },
       ];
 
-  const getActiveLink = () => {
-    if (location.pathname === '/gallery') return 'Gallery';
-    return 'Home';
-  };
-
-  const [activeLink, setActiveLink] = useState(getActiveLink());
-
-  useEffect(() => {
-    setActiveLink(getActiveLink());
-  }, [location.pathname]);
+  const activeLink = location.pathname === '/gallery' ? 'Gallery' : 'Home';
 
   const renderNavLink = (link: { label: string; href: string; type: 'anchor' | 'route' }, onClick?: () => void) => {
     const isActive = activeLink === link.label;
@@ -70,10 +61,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuote }) => {
         <Link
           key={link.label}
           to={link.href}
-          onClick={() => {
-            setActiveLink(link.label);
-            onClick?.();
-          }}
+          onClick={onClick}
           className={className}
         >
           {content}
@@ -85,10 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuote }) => {
       <a
         key={link.label}
         href={link.href}
-        onClick={() => {
-          setActiveLink(link.label);
-          onClick?.();
-        }}
+        onClick={onClick}
         className={className}
       >
         {content}
@@ -189,10 +174,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuote }) => {
                   <Link
                     key={link.label}
                     to={link.href}
-                    onClick={() => {
-                      setActiveLink(link.label);
-                      setMobileMenuOpen(false);
-                    }}
+                    onClick={() => setMobileMenuOpen(false)}
                     className={className}
                   >
                     {content}
@@ -204,10 +186,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuote }) => {
                 <a
                   key={link.label}
                   href={link.href}
-                  onClick={() => {
-                    setActiveLink(link.label);
-                    setMobileMenuOpen(false);
-                  }}
+                  onClick={() => setMobileMenuOpen(false)}
                   className={className}
                 >
                   {content}

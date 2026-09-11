@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { X, Check, Sparkles, MessageCircle, ArrowRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -13,7 +13,9 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
   onClose,
   initialService,
 }) => {
-  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [selectedServices, setSelectedServices] = useState<string[]>(
+    initialService ? [initialService] : []
+  );
   const [projectScale, setProjectScale] = useState<string>('Medium (100-300 guests)');
   const [formData, setFormData] = useState({
     name: '',
@@ -26,21 +28,10 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
 
   const WHATSAPP_NUMBER = '919440427791'; // Owner's WhatsApp Number
 
-  // Reset to form fields every time the modal opens
-  useEffect(() => {
-    if (isOpen) {
-      setIsSubmitted(false);
-      setFormData((prev) => ({ ...prev, notes: '' }));
-      if (initialService) {
-        setSelectedServices([initialService]);
-      }
-    }
-  }, [isOpen, initialService]);
-
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsSubmitted(false);
     onClose();
-  };
+  }, [onClose]);
 
   const handleResetForm = () => {
     setIsSubmitted(false);
@@ -59,7 +50,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
       document.body.style.overflow = 'auto';
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen]);
+  }, [isOpen, handleClose]);
 
   if (!isOpen) return null;
 
