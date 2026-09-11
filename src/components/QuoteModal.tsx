@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { X, Check, Sparkles, MessageCircle, ArrowRight } from 'lucide-react';
+import { X, Check, Sparkles, MessageCircle, ArrowRight, Copy } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface QuoteModalProps {
@@ -25,8 +25,22 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [whatsappLink, setWhatsappLink] = useState('');
+  const [copiedClientLink, setCopiedClientLink] = useState(false);
 
   const WHATSAPP_NUMBER = '919440427791'; // Owner's WhatsApp Number
+
+  const handleCopyClientLink = () => {
+    const baseUrl = window.location.origin + (import.meta.env.BASE_URL || '/');
+    const cleanBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+    const quoteUrl = `${cleanBase}quote${
+      selectedServices.length === 1 ? `?service=${encodeURIComponent(selectedServices[0])}` : ''
+    }`;
+
+    navigator.clipboard.writeText(quoteUrl).then(() => {
+      setCopiedClientLink(true);
+      setTimeout(() => setCopiedClientLink(false), 2500);
+    });
+  };
 
   const handleClose = useCallback(() => {
     setIsSubmitted(false);
@@ -142,13 +156,34 @@ ${formData.notes || 'No additional notes provided'}`;
               Request a Quote
             </h3>
           </div>
-          <button
-            onClick={handleClose}
-            className="p-2.5 rounded-full bg-studio-800 text-slate-400 hover:text-white hover:bg-studio-700 transition-colors"
-            aria-label="Close modal"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleCopyClientLink}
+              title="Copy shareable quote link to send to clients"
+              className="px-3 py-1.5 rounded-full bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/30 text-cyan-300 text-xs font-semibold flex items-center gap-1.5 transition-all shadow-glow-sm"
+            >
+              {copiedClientLink ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="text-emerald-300">Link Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3.5 h-3.5 text-cyan-400" />
+                  <span className="hidden sm:inline">Copy Link for Client</span>
+                  <span className="sm:hidden">Share</span>
+                </>
+              )}
+            </button>
+            <button
+              onClick={handleClose}
+              className="p-2.5 rounded-full bg-studio-800 text-slate-400 hover:text-white hover:bg-studio-700 transition-colors"
+              aria-label="Close modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Content Body */}

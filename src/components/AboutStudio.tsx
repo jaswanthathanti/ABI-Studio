@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowRight, Sparkles, Camera, Heart, Award, Tv, Quote, CheckCircle2, Calendar } from 'lucide-react';
+import { getAssetUrl } from '../utils/assetHelper';
 
 interface AboutStudioProps {
   onMeetStudio: () => void;
@@ -9,9 +10,9 @@ export const AboutStudio: React.FC<AboutStudioProps> = ({ onMeetStudio }) => {
   const experienceCards = [
     {
       icon: <Award className="w-5 h-5 text-cyan-400" />,
-      highlight: '10+ Years',
+      highlight: '30+ Years',
       title: 'Craft & Dedication',
-      desc: 'Mastering natural light, authentic candid emotions, and cinematic wedding aesthetics.',
+      desc: 'Mastering natural light, authentic candid emotions, and cinematic wedding aesthetics across three decades.',
     },
     {
       icon: <Heart className="w-5 h-5 text-cyan-400" />,
@@ -55,8 +56,8 @@ export const AboutStudio: React.FC<AboutStudioProps> = ({ onMeetStudio }) => {
             <div className="relative rounded-3xl p-2 sm:p-3 bg-white/[0.03] backdrop-blur-2xl border border-white/15 shadow-[0_25px_60px_-15px_rgba(0,168,255,0.25),inset_0_1px_1px_rgba(255,255,255,0.2)] group overflow-hidden">
               <div className="relative rounded-2xl overflow-hidden">
                 <img
-                  src="/assets/photographer.jpg"
-                  alt="Abi - Lead Wedding Photographer & Founder"
+                  src={getAssetUrl('assets/photographer.jpg')}
+                  alt="A. Satish Chand - Master Photographer & Founder"
                   loading="lazy"
                   className="w-full aspect-[3/4] object-cover object-top transition-transform duration-700 group-hover:scale-105"
                 />
@@ -67,7 +68,7 @@ export const AboutStudio: React.FC<AboutStudioProps> = ({ onMeetStudio }) => {
               {/* Floating Glass Top Badge */}
               <div className="absolute top-6 right-6 px-3.5 py-1.5 rounded-full bg-studio-950/70 backdrop-blur-xl border border-cyan-400/40 shadow-glow-sm flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-                <span className="text-xs font-mono font-bold text-cyan-300">10+ Years Experience</span>
+                <span className="text-xs font-mono font-bold text-cyan-300">30+ Years Experience</span>
               </div>
 
               {/* Floating Glass Bottom Persona Card */}
@@ -75,10 +76,10 @@ export const AboutStudio: React.FC<AboutStudioProps> = ({ onMeetStudio }) => {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2">
-                      <h4 className="text-base sm:text-lg font-bold text-white font-display">Abi</h4>
+                      <h4 className="text-base sm:text-lg font-bold text-white font-display">A. Satish Chand</h4>
                       <span className="text-cyan-400 text-xs font-medium">✓ Verified Artist</span>
                     </div>
-                    <p className="text-xs text-slate-300 mt-0.5">Lead Photographer &amp; Creative Director</p>
+                    <p className="text-xs text-slate-300 mt-0.5">Master Photographer &amp; Founder</p>
                   </div>
                   <div className="text-right">
                     <div className="flex items-center gap-1 text-amber-accent text-xs font-bold">
@@ -112,13 +113,13 @@ export const AboutStudio: React.FC<AboutStudioProps> = ({ onMeetStudio }) => {
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white font-display leading-tight">
                 Behind the Lens:{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric via-cyan-400 to-electric-light">
-                  Abi
+                  A. Satish Chand
                 </span>
               </h2>
 
               {/* Concise, Shortened Bio Description */}
               <p className="mt-4 text-slate-200 text-sm sm:text-base leading-relaxed font-light">
-                Hi, I'm <strong className="text-white font-semibold">Abi</strong>, founder and lead visual artist at <strong className="text-white font-semibold">LED's &amp; ABI Studio</strong>. For over a decade, we've blended candid emotional storytelling with cutting-edge LED production to turn once-in-a-lifetime celebrations into timeless cinematic art.
+                Hi, I'm <strong className="text-white font-semibold">A. Satish Chand</strong>, founder and master visual artist at <strong className="text-white font-semibold">LED's &amp; ABI Studio</strong>. With over <strong className="text-cyan-300 font-semibold">30+ years of professional photography experience</strong>, we've blended candid emotional storytelling with cutting-edge LED production to turn once-in-a-lifetime celebrations into timeless cinematic art.
               </p>
 
               {/* Glassmorphic Quote Bar */}

@@ -1,3 +1,5 @@
+import { getAssetUrl } from '../utils/assetHelper';
+
 export interface ServiceCoverageItem {
   title: string;
   description: string;
@@ -25,7 +27,7 @@ export const servicesData: ServiceItem[] = [
     category: 'LED Displays',
     tagline: 'Transform your venue with crystal-clear, flicker-free modular LED video walls.',
     description: 'Premium LED walls and screens for weddings, receptions, and events. Crystal-clear visuals that transform your venue into a stunning visual experience.',
-    image: '/assets/services/service-led.jpg',
+    image: getAssetUrl('assets/services/service-led.jpg'),
     iconName: 'Tv',
     features: ['Wedding LED Walls', 'Reception Backdrops', 'Stage LED Screens', 'Outdoor LED Displays'],
     whatIsCovered: [
@@ -70,7 +72,7 @@ export const servicesData: ServiceItem[] = [
     category: 'Photography',
     tagline: 'Preserving unscripted candid emotions and timeless sacred rituals in heirloom fidelity.',
     description: 'Capturing your most precious moments with artistry and emotion. From candid shots to traditional portraits, we preserve every beautiful detail of your special day.',
-    image: '/assets/services/service-photo.jpg',
+    image: getAssetUrl('assets/services/service-photo.jpg'),
     iconName: 'Camera',
     features: ['Candid Photography', 'Traditional Portraits', 'Couple Shoots', 'Family Portraits'],
     whatIsCovered: [
@@ -115,7 +117,7 @@ export const servicesData: ServiceItem[] = [
     category: 'Videography',
     tagline: 'Heartfelt, cinematic love stories filmed with 4K cinema lenses and master sound design.',
     description: 'Cinematic wedding films that tell your love story beautifully. From teasers and highlights to full ceremony coverage, every emotion is captured in stunning detail.',
-    image: '/assets/services/service-video.jpg',
+    image: getAssetUrl('assets/services/service-video.jpg'),
     iconName: 'Video',
     features: ['Wedding Teasers', 'Highlight Reels', 'Full Ceremony Films', 'Same-Day Edits'],
     whatIsCovered: [
@@ -160,7 +162,7 @@ export const servicesData: ServiceItem[] = [
     category: 'Albums',
     tagline: 'Bespoke heirloom photo albums handcrafted with fine archival paper and Italian leather.',
     description: 'Beautifully crafted premium photo albums and prints that you will treasure forever. Custom-designed layouts with the finest materials and finishes.',
-    image: '/assets/services/service-studio.jpg',
+    image: getAssetUrl('assets/services/service-studio.jpg'),
     iconName: 'BookOpen',
     features: ['Premium Albums', 'Canvas Prints', 'Photo Frames', 'Custom Designs'],
     whatIsCovered: [
@@ -205,7 +207,7 @@ export const servicesData: ServiceItem[] = [
     category: 'Pre-Wedding',
     tagline: 'Romantic, relaxed couple sessions at breathtaking locations before your big celebration.',
     description: 'Romantic and creative pre-wedding photoshoots at stunning locations. Capture the excitement and love before your big day with our artistic team.',
-    image: '/assets/gallery/gallery-nature.jpg',
+    image: getAssetUrl('assets/gallery/gallery-nature.jpg'),
     iconName: 'Heart',
     features: ['Outdoor Locations', 'Indoor Studio', 'Destination Shoots', 'Creative Concepts'],
     whatIsCovered: [
@@ -249,7 +251,7 @@ export const servicesData: ServiceItem[] = [
     category: 'Events',
     tagline: 'Vibrant, complete photography and videography for birthdays, receptions, and galas.',
     description: 'Complete photography and videography coverage for birthdays, receptions, corporate events, and celebrations of all kinds. Every moment, every smile, captured perfectly.',
-    image: '/assets/gallery/gallery-gala.jpg',
+    image: getAssetUrl('assets/gallery/gallery-gala.jpg'),
     iconName: 'PartyPopper',
     features: ['Birthday Parties', 'Corporate Events', 'Reception Coverage', 'Live Streaming'],
     whatIsCovered: [

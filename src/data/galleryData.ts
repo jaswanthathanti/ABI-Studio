@@ -1,3 +1,5 @@
+import { getAssetUrl } from '../utils/assetHelper';
+
 export interface GalleryItem {
   id: string;
   title: string;
@@ -27,7 +29,7 @@ export const galleryData: GalleryItem[] = [
     title: 'Royal Wedding Celebration',
     subtitle: 'A Grand Traditional Wedding',
     category: 'Weddings',
-    image: '/assets/gallery/gallery-fashion.jpg',
+    image: getAssetUrl('assets/gallery/gallery-fashion.jpg'),
     client: 'Sharma Family',
     year: '2026',
     resolution: 'Full HD Photography',
@@ -39,7 +41,7 @@ export const galleryData: GalleryItem[] = [
     title: 'Golden Hour Romance',
     subtitle: 'Pre-Wedding Couple Shoot',
     category: 'Pre-Wedding',
-    image: '/assets/gallery/gallery-nature.jpg',
+    image: getAssetUrl('assets/gallery/gallery-nature.jpg'),
     client: 'Priya & Rahul',
     year: '2026',
     resolution: 'High Resolution',
@@ -51,7 +53,7 @@ export const galleryData: GalleryItem[] = [
     title: 'Grand Reception Night',
     subtitle: 'LED Stage & Reception Coverage',
     category: 'LED Setups',
-    image: '/assets/gallery/gallery-arena.jpg',
+    image: getAssetUrl('assets/gallery/gallery-arena.jpg'),
     client: 'Reddy Family',
     year: '2026',
     resolution: 'Full HD LED Display',
@@ -63,7 +65,7 @@ export const galleryData: GalleryItem[] = [
     title: 'Cinematic Wedding Film',
     subtitle: 'A Love Story in Motion',
     category: 'Films',
-    image: '/assets/gallery/gallery-auto.jpg',
+    image: getAssetUrl('assets/gallery/gallery-auto.jpg'),
     client: 'Anita & Vikram',
     year: '2025',
     resolution: '4K Cinematic',
@@ -75,7 +77,7 @@ export const galleryData: GalleryItem[] = [
     title: 'Grand Birthday Celebration',
     subtitle: 'Event Photography & LED',
     category: 'Events',
-    image: '/assets/gallery/gallery-gala.jpg',
+    image: getAssetUrl('assets/gallery/gallery-gala.jpg'),
     client: 'Patel Family',
     year: '2025',
     resolution: 'High Resolution',
@@ -87,7 +89,7 @@ export const galleryData: GalleryItem[] = [
     title: 'Premium Wedding Album',
     subtitle: 'Custom Designed Photo Album',
     category: 'Albums',
-    image: '/assets/gallery/gallery-summit.jpg',
+    image: getAssetUrl('assets/gallery/gallery-summit.jpg'),
     client: 'Kapoor Family',
     year: '2025',
     resolution: 'Print Quality',

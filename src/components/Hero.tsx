@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Play, ChevronDown } from 'lucide-react';
+import { getAssetUrl } from '../utils/assetHelper';
 
 interface HeroProps {
   onExploreClick: () => void;
@@ -29,7 +30,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onShowreelClick }) =
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-center transition-transform duration-700 ease-out will-change-transform"
         style={{
-          backgroundImage: "url('/assets/hero-studio-clean.jpg')",
+          backgroundImage: `url('${getAssetUrl('assets/hero-studio-clean.jpg')}')`,
           transform: `scale(1.04) translate(${mousePos.x * 10}px, ${mousePos.y * 8}px)`,
         }}
       >

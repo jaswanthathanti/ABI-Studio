@@ -23,10 +23,10 @@ export const statsData: StatItem[] = [
   },
   {
     id: 'experience',
-    value: '10+',
+    value: '30+',
     label: 'Years Experience',
     iconName: 'Clock',
-    description: 'A decade of capturing precious moments'
+    description: 'Over three decades of capturing precious moments'
   },
   {
     id: 'satisfaction',

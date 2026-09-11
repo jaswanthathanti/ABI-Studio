@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { getAssetUrl } from '../utils/assetHelper';
 
 interface ShowreelModalProps {
   isOpen: boolean;
@@ -12,10 +13,10 @@ export const ShowreelModal: React.FC<ShowreelModalProps> = ({ isOpen, onClose })
   const [activeSegmentIndex, setActiveSegmentIndex] = useState(0);
 
   const segments = [
-    { title: 'Arena LED Video Walls', time: '0:00 - 0:45', image: '/assets/gallery/gallery-arena.jpg' },
-    { title: 'Aura Hypercar Anamorphic Commercial', time: '0:45 - 1:30', image: '/assets/gallery/gallery-auto.jpg' },
-    { title: 'Keynote 8K Curved Staging', time: '1:30 - 2:10', image: '/assets/gallery/gallery-summit.jpg' },
-    { title: 'Valkyrie Medium Format Editorial', time: '2:10 - 2:50', image: '/assets/gallery/gallery-fashion.jpg' },
+    { title: 'Arena LED Video Walls', time: '0:00 - 0:45', image: getAssetUrl('assets/gallery/gallery-arena.jpg') },
+    { title: 'Aura Hypercar Anamorphic Commercial', time: '0:45 - 1:30', image: getAssetUrl('assets/gallery/gallery-auto.jpg') },
+    { title: 'Keynote 8K Curved Staging', time: '1:30 - 2:10', image: getAssetUrl('assets/gallery/gallery-summit.jpg') },
+    { title: 'Valkyrie Medium Format Editorial', time: '2:10 - 2:50', image: getAssetUrl('assets/gallery/gallery-fashion.jpg') },
   ];
 
   useEffect(() => {
