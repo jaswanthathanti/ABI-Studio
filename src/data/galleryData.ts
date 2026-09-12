@@ -6,6 +6,8 @@ export interface GalleryItem {
   subtitle: string;
   category: 'Weddings' | 'Pre-Wedding' | 'Events' | 'LED Setups' | 'Albums' | 'Films';
   image: string;
+  type?: 'photo' | 'film';
+  videoUrl?: string;
   client: string;
   year: string;
   resolution: string;
@@ -65,6 +67,7 @@ export const galleryData: GalleryItem[] = [
     title: 'Cinematic Wedding Film',
     subtitle: 'A Love Story in Motion',
     category: 'Films',
+    type: 'film',
     image: getAssetUrl('assets/gallery/gallery-auto.jpg'),
     client: 'Anita & Vikram',
     year: '2025',

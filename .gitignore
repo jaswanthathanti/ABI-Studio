@@ -33,6 +33,7 @@ coverage
 .cache
 .parcel-cache
 .eslintcache
+.sanity
 
 # Editor & IDE directories and files
 .vscode/*

@@ -35,7 +35,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenQuote, onShowreelClick
       <Services onSelectService={(service) => onOpenQuote(service)} />
 
       {/* Featured Work */}
-      <FeaturedWork />
+      <FeaturedWork onOpenQuote={onOpenQuote} />
 
       {/* About Studio */}
       <AboutStudio onMeetStudio={() => onOpenQuote('Wedding Photography')} />

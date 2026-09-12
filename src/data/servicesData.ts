@@ -6,13 +6,14 @@ export interface ServiceCoverageItem {
 }
 
 export interface ServiceItem {
+  id?: string;
   number: string;
   title: string;
   category: string;
   tagline: string;
   description: string;
   image: string;
-  iconName: 'Tv' | 'Camera' | 'Video' | 'BookOpen' | 'Heart' | 'PartyPopper';
+  iconName: 'Tv' | 'Camera' | 'Video' | 'BookOpen' | 'Heart' | 'PartyPopper' | 'Sparkles';
   features: string[];
   whatIsCovered: ServiceCoverageItem[];
   deliverables: string[];

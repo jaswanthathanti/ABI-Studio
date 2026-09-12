@@ -1,40 +1,45 @@
 import React from 'react';
 import { ArrowRight, Sparkles, Camera, Heart, Award, Tv, Quote, CheckCircle2, Calendar } from 'lucide-react';
 import { getAssetUrl } from '../utils/assetHelper';
+import { useSiteContent } from '../sanity/useSiteContent';
+import { urlForImage } from '../sanity/client';
 
 interface AboutStudioProps {
   onMeetStudio: () => void;
 }
 
 export const AboutStudio: React.FC<AboutStudioProps> = ({ onMeetStudio }) => {
-  const experienceCards = [
+  const { content } = useSiteContent();
+  const about = content.about;
+
+  const defaultExperienceCards = [
     {
-      icon: <Award className="w-5 h-5 text-cyan-400" />,
+      iconName: 'Award',
       highlight: '30+ Years',
       title: 'Craft & Dedication',
       desc: 'Mastering natural light, authentic candid emotions, and cinematic wedding aesthetics across three decades.',
     },
     {
-      icon: <Heart className="w-5 h-5 text-cyan-400" />,
+      iconName: 'Heart',
       highlight: '500+ Weddings',
       title: 'Love Stories Told',
       desc: 'Trusted by families across destinations and sacred traditions to preserve their memories.',
     },
     {
-      icon: <Tv className="w-5 h-5 text-cyan-400" />,
+      iconName: 'Tv',
       highlight: 'LED & Tech Setup',
       title: 'Visual Innovation',
       desc: 'Pioneering integration of flicker-free high-definition LED stage walls with live coverage.',
     },
     {
-      icon: <Camera className="w-5 h-5 text-cyan-400" />,
+      iconName: 'Camera',
       highlight: 'Full-Spectrum',
       title: 'End-to-End Excellence',
       desc: 'From 4K cinematic film teasers and drone shots to heirloom handcrafted luxury albums.',
     },
   ];
 
-  const skillPills = [
+  const defaultSkillPills = [
     'Candid Photography',
     'Cinematic Wedding Films',
     'Pre-Wedding Shoots',
@@ -43,8 +48,35 @@ export const AboutStudio: React.FC<AboutStudioProps> = ({ onMeetStudio }) => {
     'Heirloom Albums',
   ];
 
+  const experienceCards = about.experienceCards && about.experienceCards.length > 0
+    ? about.experienceCards
+    : defaultExperienceCards;
+
+  const skillPills = about.skillPills && about.skillPills.length > 0
+    ? about.skillPills
+    : defaultSkillPills;
+
+  const getCardIcon = (iconName?: string) => {
+    switch (iconName) {
+      case 'Award':
+        return <Award className="w-5 h-5 text-cyan-400" />;
+      case 'Heart':
+        return <Heart className="w-5 h-5 text-cyan-400" />;
+      case 'Tv':
+        return <Tv className="w-5 h-5 text-cyan-400" />;
+      case 'Camera':
+        return <Camera className="w-5 h-5 text-cyan-400" />;
+      default:
+        return <Award className="w-5 h-5 text-cyan-400" />;
+    }
+  };
+
+  const founderPhotoUrl = about.founderPhoto
+    ? urlForImage(about.founderPhoto, getAssetUrl('assets/photographer.jpg'))
+    : getAssetUrl('assets/photographer.jpg');
+
   return (
-    <section id="about" className="relative py-24 sm:py-28 px-4 sm:px-6 lg:px-8 bg-studio-950 overflow-hidden">
+    <section id="about" className="scroll-mt-24 relative py-24 sm:py-28 px-4 sm:px-6 lg:px-8 bg-studio-950 overflow-hidden">
       {/* Dynamic ambient background lighting shining through frosted glass */}
       <div className="absolute top-1/4 -left-36 w-96 h-96 bg-electric/15 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-1/3 -right-36 w-96 h-96 bg-cyan-400/15 rounded-full blur-[140px] pointer-events-none" />
@@ -56,8 +88,8 @@ export const AboutStudio: React.FC<AboutStudioProps> = ({ onMeetStudio }) => {
             <div className="relative rounded-3xl p-2 sm:p-3 bg-white/[0.03] backdrop-blur-2xl border border-white/15 shadow-[0_25px_60px_-15px_rgba(0,168,255,0.25),inset_0_1px_1px_rgba(255,255,255,0.2)] group overflow-hidden">
               <div className="relative rounded-2xl overflow-hidden">
                 <img
-                  src={getAssetUrl('assets/photographer.jpg')}
-                  alt="A. Satish Chand - Master Photographer & Founder"
+                  src={founderPhotoUrl}
+                  alt={`${about.founderName || 'A. Satish Chand'} - ${about.founderTitle || 'Master Photographer & Founder'}`}
                   loading="lazy"
                   className="w-full aspect-[3/4] object-cover object-top transition-transform duration-700 group-hover:scale-105"
                 />
@@ -68,7 +100,9 @@ export const AboutStudio: React.FC<AboutStudioProps> = ({ onMeetStudio }) => {
               {/* Floating Glass Top Badge */}
               <div className="absolute top-6 right-6 px-3.5 py-1.5 rounded-full bg-studio-950/70 backdrop-blur-xl border border-cyan-400/40 shadow-glow-sm flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-                <span className="text-xs font-mono font-bold text-cyan-300">30+ Years Experience</span>
+                <span className="text-xs font-mono font-bold text-cyan-300">
+                  {about.yearsExperience || '30+ Years Experience'}
+                </span>
               </div>
 
               {/* Floating Glass Bottom Persona Card */}
@@ -76,10 +110,14 @@ export const AboutStudio: React.FC<AboutStudioProps> = ({ onMeetStudio }) => {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2">
-                      <h4 className="text-base sm:text-lg font-bold text-white font-display">A. Satish Chand</h4>
+                      <h4 className="text-base sm:text-lg font-bold text-white font-display">
+                        {about.founderName || 'A. Satish Chand'}
+                      </h4>
                       <span className="text-cyan-400 text-xs font-medium">✓ Verified Artist</span>
                     </div>
-                    <p className="text-xs text-slate-300 mt-0.5">Master Photographer &amp; Founder</p>
+                    <p className="text-xs text-slate-300 mt-0.5">
+                      {about.founderTitle || 'Master Photographer & Founder'}
+                    </p>
                   </div>
                   <div className="text-right">
                     <div className="flex items-center gap-1 text-amber-accent text-xs font-bold">
@@ -113,13 +151,17 @@ export const AboutStudio: React.FC<AboutStudioProps> = ({ onMeetStudio }) => {
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white font-display leading-tight">
                 Behind the Lens:{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric via-cyan-400 to-electric-light">
-                  A. Satish Chand
+                  {about.founderName || 'A. Satish Chand'}
                 </span>
               </h2>
 
               {/* Concise, Shortened Bio Description */}
               <p className="mt-4 text-slate-200 text-sm sm:text-base leading-relaxed font-light">
-                Hi, I'm <strong className="text-white font-semibold">A. Satish Chand</strong>, founder and master visual artist at <strong className="text-white font-semibold">LED's &amp; ABI Studio</strong>. With over <strong className="text-cyan-300 font-semibold">30+ years of professional photography experience</strong>, we've blended candid emotional storytelling with cutting-edge LED production to turn once-in-a-lifetime celebrations into timeless cinematic art.
+                {about.founderBio || (
+                  <>
+                    Hi, I'm <strong className="text-white font-semibold">{about.founderName || 'A. Satish Chand'}</strong>, founder and master visual artist at <strong className="text-white font-semibold">LED's &amp; ABI Studio</strong>. With over <strong className="text-cyan-300 font-semibold">{about.yearsExperience || '30+ years'} of professional photography experience</strong>, we've blended candid emotional storytelling with cutting-edge LED production to turn once-in-a-lifetime celebrations into timeless cinematic art.
+                  </>
+                )}
               </p>
 
               {/* Glassmorphic Quote Bar */}
@@ -132,14 +174,14 @@ export const AboutStudio: React.FC<AboutStudioProps> = ({ onMeetStudio }) => {
 
               {/* Glassmorphism Experience Cards (2x2 Grid) */}
               <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {experienceCards.map((card, i) => (
+                {experienceCards.map((card: any, i: number) => (
                   <div
                     key={i}
                     className="p-3.5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.07] backdrop-blur-xl border border-white/10 hover:border-cyan-400/40 transition-all duration-300 group hover:-translate-y-0.5 hover:shadow-[0_12px_30px_-5px_rgba(0,168,255,0.2),inset_0_1px_0_rgba(255,255,255,0.1)]"
                   >
                     <div className="flex items-center gap-2.5 mb-1.5">
                       <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-studio-800/80 border border-cyan-500/25 group-hover:border-cyan-400 group-hover:shadow-glow-sm transition-all shrink-0">
-                        {card.icon}
+                        {getCardIcon(card.icon || card.iconName)}
                       </div>
                       <div>
                         <span className="text-[10px] font-mono font-bold text-cyan-400 block leading-tight">

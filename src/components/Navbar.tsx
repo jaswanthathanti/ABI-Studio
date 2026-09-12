@@ -1,15 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Menu, X, Sparkles } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useSiteContent } from '../sanity/useSiteContent';
 
 interface NavbarProps {
   onOpenQuote: () => void;
 }
 
+interface NavItem {
+  label: string;
+  targetId?: string;
+  href?: string;
+}
+
+const NAV_ITEMS: NavItem[] = [
+  { label: 'Home', targetId: 'hero' },
+  { label: 'Services', targetId: 'services' },
+  { label: 'Gallery', href: '/gallery' },
+  { label: 'About', targetId: 'about' },
+  { label: 'FAQ', targetId: 'faq' },
+  { label: 'Contact', targetId: 'cta' },
+];
+
 export const Navbar: React.FC<NavbarProps> = ({ onOpenQuote }) => {
+  const { content } = useSiteContent();
+  const settings = content.siteSettings;
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('Home');
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,64 +41,152 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuote }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const isHomePage = location.pathname === '/';
+  // Dynamic ScrollSpy tracking active section on Home Page or Gallery
+  useEffect(() => {
+    if (location.pathname === '/gallery') {
+      setActiveSection('Gallery');
+      return;
+    }
 
-  const navLinks = isHomePage
-    ? [
-        { label: 'Home', href: '#hero', type: 'anchor' as const },
-        { label: 'Services', href: '#services', type: 'anchor' as const },
-        { label: 'Gallery', href: '/gallery', type: 'route' as const },
-        { label: 'About', href: '#about', type: 'anchor' as const },
-        { label: 'FAQ', href: '#faq', type: 'anchor' as const },
-        { label: 'Contact', href: '#cta', type: 'anchor' as const },
-      ]
-    : [
-        { label: 'Home', href: '/', type: 'route' as const },
-        { label: 'Services', href: '/#services', type: 'route' as const },
-        { label: 'Gallery', href: '/gallery', type: 'route' as const },
-        { label: 'About', href: '/#about', type: 'route' as const },
-        { label: 'FAQ', href: '/#faq', type: 'route' as const },
-        { label: 'Contact', href: '/#cta', type: 'route' as const },
-      ];
+    if (!isHomePage) {
+      setActiveSection('');
+      return;
+    }
 
-  const activeLink = location.pathname === '/gallery' ? 'Gallery' : 'Home';
+    const sectionIds: { id: string; label: string }[] = [
+      { id: 'hero', label: 'Home' },
+      { id: 'services', label: 'Services' },
+      { id: 'gallery', label: 'Gallery' },
+      { id: 'about', label: 'About' },
+      { id: 'reviews-faq', label: 'FAQ' },
+      { id: 'cta', label: 'Contact' },
+    ];
 
-  const renderNavLink = (link: { label: string; href: string; type: 'anchor' | 'route' }, onClick?: () => void) => {
-    const isActive = activeLink === link.label;
-    const className = `relative px-4 py-1.5 text-sm font-medium transition-all duration-200 rounded-full ${
-      isActive ? 'text-white' : 'text-slate-400 hover:text-white'
-    }`;
+    const handleScrollSpy = () => {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
 
-    const content = (
-      <>
-        {isActive && (
-          <span className="absolute inset-0 bg-cyan-500/15 border border-cyan-400/30 rounded-full -z-10 shadow-glow-sm" />
-        )}
-        {link.label}
-      </>
-    );
+      // Top of page threshold -> Home
+      if (scrollY < 120) {
+        setActiveSection('Home');
+        return;
+      }
 
-    if (link.type === 'route') {
+      // Bottom threshold reached -> Contact
+      if (scrollY + windowHeight >= documentHeight - 70) {
+        setActiveSection('Contact');
+        return;
+      }
+
+      // Scan line positioned 140px below the viewport top (below fixed navbar)
+      const scanLineY = 140;
+
+      // Check sections from bottom to top using absolute document coordinates:
+      // (rect.top + scrollY) computes the true absolute top in the document,
+      // completely immune to offsetParent or nested relative containers!
+      for (let i = sectionIds.length - 1; i >= 0; i--) {
+        const { id, label } = sectionIds[i];
+        const elem = document.getElementById(id) || (id === 'reviews-faq' ? document.getElementById('faq') : null);
+        if (elem) {
+          const rect = elem.getBoundingClientRect();
+          const trueTop = rect.top + scrollY;
+          if (scrollY + scanLineY >= trueTop) {
+            setActiveSection(label);
+            return;
+          }
+        }
+      }
+
+      setActiveSection('Home');
+    };
+
+    handleScrollSpy();
+    window.addEventListener('scroll', handleScrollSpy, { passive: true });
+    return () => window.removeEventListener('scroll', handleScrollSpy);
+  }, [location.pathname, isHomePage]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
+  const handleNavClick = (e: React.MouseEvent, item: NavItem) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+
+    if (item.href) {
+      if (location.pathname === item.href) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        navigate(item.href);
+      }
+      return;
+    }
+
+    if (item.targetId) {
+      if (isHomePage) {
+        setActiveSection(item.label);
+        if (item.targetId === 'hero') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          if (window.location.hash) {
+            window.history.pushState(null, '', '/');
+          }
+        } else {
+          const elem = document.getElementById(item.targetId);
+          if (elem) {
+            elem.scrollIntoView({ behavior: 'smooth' });
+            window.history.pushState(null, '', `#${item.targetId}`);
+          }
+        }
+      } else {
+        navigate(item.targetId === 'hero' ? '/' : `/#${item.targetId}`);
+      }
+    }
+  };
+
+  const renderNavLink = (item: NavItem, isMobile = false) => {
+    const isActive = activeSection === item.label;
+    const resolvedHref = item.href || (isHomePage ? `#${item.targetId}` : `/#${item.targetId}`);
+
+    if (isMobile) {
       return (
-        <Link
-          key={link.label}
-          to={link.href}
-          onClick={onClick}
-          className={className}
+        <a
+          key={item.label}
+          href={resolvedHref}
+          onClick={(e) => handleNavClick(e, item)}
+          className={`text-xl font-semibold transition-colors py-2.5 border-b border-white/5 flex items-center justify-between ${
+            isActive ? 'text-cyan-400' : 'text-slate-300 hover:text-white'
+          }`}
         >
-          {content}
-        </Link>
+          <span>{item.label}</span>
+          {isActive && (
+            <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-glow-sm" />
+          )}
+        </a>
       );
     }
 
     return (
       <a
-        key={link.label}
-        href={link.href}
-        onClick={onClick}
-        className={className}
+        key={item.label}
+        href={resolvedHref}
+        onClick={(e) => handleNavClick(e, item)}
+        className={`relative px-4 py-1.5 text-sm font-medium transition-all duration-200 rounded-full cursor-pointer select-none ${
+          isActive ? 'text-white' : 'text-slate-400 hover:text-white'
+        }`}
       >
-        {content}
+        {isActive && (
+          <span className="absolute inset-0 bg-cyan-500/15 border border-cyan-400/30 rounded-full -z-10 shadow-glow-sm" />
+        )}
+        {item.label}
       </a>
     );
   };
@@ -94,6 +204,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuote }) => {
           {/* Brand Logo */}
           <Link
             to="/"
+            onClick={(e) => {
+              if (isHomePage) {
+                e.preventDefault();
+                setActiveSection('Home');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (window.location.hash) {
+                  window.history.pushState(null, '', '/');
+                }
+              }
+            }}
             className="group flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-lg p-1"
             aria-label="LED's and ABI Studio Home"
           >
@@ -105,16 +225,20 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuote }) => {
               <span className="w-2 h-2 rounded-sm bg-gradient-to-tr from-cyan-400 to-electric animate-pulse" />
             </div>
             <span className="text-lg tracking-tight font-extrabold text-white group-hover:text-slate-100 transition-colors">
-              LED's &amp;{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-glow via-cyan-300 to-electric-light">
-                ABI Studio
-              </span>
+              {settings.studioName || (
+                <>
+                  LED's &amp;{' '}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-glow via-cyan-300 to-electric-light">
+                    ABI Studio
+                  </span>
+                </>
+              )}
             </span>
           </Link>
 
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center gap-1 rounded-full bg-studio-900/60 border border-white/10 px-4 py-1.5 backdrop-blur-md shadow-inner">
-            {navLinks.map((link) => renderNavLink(link))}
+            {NAV_ITEMS.map((item) => renderNavLink(item))}
           </nav>
 
           {/* Right Action: Get a Quote */}
@@ -150,49 +274,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuote }) => {
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-40 sm:hidden bg-studio-950/95 backdrop-blur-2xl pt-24 px-6 flex flex-col justify-between pb-10 border-b border-cyan-500/20 animate-fadeIn">
-          <div className="flex flex-col space-y-4">
+          <div className="flex flex-col space-y-3">
             <div className="text-xs uppercase tracking-widest text-cyan-400/80 font-bold mb-2">
               Navigation
             </div>
-            {navLinks.map((link) => {
-              const isActive = activeLink === link.label;
-              const className = `text-xl font-semibold transition-colors py-2 border-b border-white/5 flex items-center justify-between ${
-                isActive ? 'text-cyan-400' : 'text-slate-300 hover:text-white'
-              }`;
-
-              const content = (
-                <>
-                  <span>{link.label}</span>
-                  {isActive && (
-                    <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-glow-sm" />
-                  )}
-                </>
-              );
-
-              if (link.type === 'route') {
-                return (
-                  <Link
-                    key={link.label}
-                    to={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={className}
-                  >
-                    {content}
-                  </Link>
-                );
-              }
-
-              return (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={className}
-                >
-                  {content}
-                </a>
-              );
-            })}
+            {NAV_ITEMS.map((item) => renderNavLink(item, true))}
           </div>
 
           <div className="space-y-3 pt-6 border-t border-white/10">

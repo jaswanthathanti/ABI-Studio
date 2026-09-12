@@ -8,6 +8,8 @@ import { WhatsAppButton } from './components/WhatsAppButton';
 import { HomePage } from './pages/HomePage';
 import { GalleryPage } from './pages/GalleryPage';
 import { QuotePage } from './pages/QuotePage';
+import { SiteContentProvider } from './sanity/useSiteContent';
+import { ScrollManager } from './components/ScrollManager';
 
 export function App() {
   const [isQuoteOpen, setIsQuoteOpen] = useState(false);
@@ -33,49 +35,52 @@ export function App() {
   }, [searchParams, setSearchParams]);
 
   return (
-    <div className="min-h-screen bg-studio-950 text-white selection:bg-electric selection:text-white">
-      {/* Fixed Frosted Navbar (hidden on standalone quote page) */}
-      {!isQuotePage && <Navbar onOpenQuote={() => handleOpenQuote()} />}
+    <SiteContentProvider>
+      <ScrollManager />
+      <div className="min-h-screen bg-studio-950 text-white selection:bg-electric selection:text-white">
+        {/* Fixed Frosted Navbar (hidden on standalone quote page) */}
+        {!isQuotePage && <Navbar onOpenQuote={() => handleOpenQuote()} />}
 
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <HomePage
-              onOpenQuote={handleOpenQuote}
-              onShowreelClick={() => setIsShowreelOpen(true)}
-            />
-          }
-        />
-        <Route
-          path="/gallery"
-          element={<GalleryPage onOpenQuote={() => handleOpenQuote()} />}
-        />
-        <Route path="/quote" element={<QuotePage />} />
-      </Routes>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HomePage
+                onOpenQuote={handleOpenQuote}
+                onShowreelClick={() => setIsShowreelOpen(true)}
+              />
+            }
+          />
+          <Route
+            path="/gallery"
+            element={<GalleryPage onOpenQuote={() => handleOpenQuote()} />}
+          />
+          <Route path="/quote" element={<QuotePage />} />
+        </Routes>
 
-      {/* Footer (hidden on standalone quote page) */}
-      {!isQuotePage && <Footer />}
+        {/* Footer (hidden on standalone quote page) */}
+        {!isQuotePage && <Footer />}
 
-      {/* Interactive Global Modals */}
-      {isQuoteOpen && (
-        <QuoteModal
-          isOpen={isQuoteOpen}
-          onClose={() => setIsQuoteOpen(false)}
-          initialService={quoteInitialService}
-        />
-      )}
+        {/* Interactive Global Modals */}
+        {isQuoteOpen && (
+          <QuoteModal
+            isOpen={isQuoteOpen}
+            onClose={() => setIsQuoteOpen(false)}
+            initialService={quoteInitialService}
+          />
+        )}
 
-      {isShowreelOpen && (
-        <ShowreelModal
-          isOpen={isShowreelOpen}
-          onClose={() => setIsShowreelOpen(false)}
-        />
-      )}
+        {isShowreelOpen && (
+          <ShowreelModal
+            isOpen={isShowreelOpen}
+            onClose={() => setIsShowreelOpen(false)}
+          />
+        )}
 
-      {/* Floating Circular WhatsApp Contact Button */}
-      <WhatsAppButton />
-    </div>
+        {/* Floating Circular WhatsApp Contact Button */}
+        <WhatsAppButton />
+      </div>
+    </SiteContentProvider>
   );
 }
 

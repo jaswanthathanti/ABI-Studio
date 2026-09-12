@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Play, ChevronDown } from 'lucide-react';
 import { getAssetUrl } from '../utils/assetHelper';
+import { useSiteContent } from '../sanity/useSiteContent';
+import { urlForImage } from '../sanity/client';
 
 interface HeroProps {
   onExploreClick: () => void;
@@ -8,6 +10,8 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ onExploreClick, onShowreelClick }) => {
+  const { content } = useSiteContent();
+  const hero = content.hero;
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -21,16 +25,20 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onShowreelClick }) =
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
+  const heroBackgroundUrl = hero.backgroundImage
+    ? urlForImage(hero.backgroundImage, getAssetUrl('assets/hero-studio-clean.jpg'))
+    : getAssetUrl('assets/hero-studio-clean.jpg');
+
   return (
     <div
       id="hero"
-      className="relative w-full h-screen min-h-[700px] flex flex-col justify-between items-center select-none overflow-hidden"
+      className="scroll-mt-24 relative w-full h-screen min-h-[700px] flex flex-col justify-between items-center select-none overflow-hidden"
     >
       {/* Background Studio Visual with Smooth Mouse Parallax */}
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-center transition-transform duration-700 ease-out will-change-transform"
         style={{
-          backgroundImage: `url('${getAssetUrl('assets/hero-studio-clean.jpg')}')`,
+          backgroundImage: `url('${heroBackgroundUrl}')`,
           transform: `scale(1.04) translate(${mousePos.x * 10}px, ${mousePos.y * 8}px)`,
         }}
       >
@@ -59,21 +67,21 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onShowreelClick }) =
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-400/30 backdrop-blur-md mb-3 sm:mb-4 shadow-glow-sm animate-float">
           <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
           <span className="text-[10px] sm:text-xs font-bold tracking-[0.25em] text-cyan-300 uppercase">
-            - CAPTURING YOUR PRECIOUS MOMENTS -
+            {hero.eyebrow || '- CAPTURING YOUR PRECIOUS MOMENTS -'}
           </span>
         </div>
 
         {/* Main Title */}
         <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight leading-[1.02] font-display drop-shadow-2xl">
-          <span className="text-white">LED's &amp; </span>
+          <span className="text-white">{hero.titlePrefix || "LED's & "}</span>
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric via-electric-glow to-cyan-300 drop-shadow-[0_0_35px_rgba(0,168,255,0.45)]">
-            ABI Studio
+            {hero.titleHighlight || 'ABI Studio'}
           </span>
         </h1>
 
         {/* Supporting Subtitle */}
         <p className="mt-3 sm:mt-4 text-xs sm:text-sm md:text-base font-medium text-slate-300 tracking-wider max-w-2xl drop-shadow-md">
-          Wedding Photography <span className="text-cyan-400/70 mx-1.5 font-light">|</span> Cinematic Films <span className="text-cyan-400/70 mx-1.5 font-light">|</span> LED Screens <span className="text-cyan-400/70 mx-1.5 font-light">|</span> Photo Albums
+          {hero.subtitle || 'Wedding Photography | Cinematic Films | LED Screens | Photo Albums'}
         </p>
 
         {/* Action Buttons */}
@@ -83,7 +91,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onShowreelClick }) =
             onClick={onExploreClick}
             className="group relative px-7 py-3 rounded-full text-sm sm:text-base font-bold text-white bg-gradient-to-r from-electric to-electric-glow shadow-glow-md hover:shadow-glow-lg transition-all duration-300 hover:scale-[1.04] active:scale-[0.98] flex items-center gap-2 border border-cyan-300/40"
           >
-            <span>View Our Work</span>
+            <span>{hero.viewWorkLabel || 'View Our Work'}</span>
             <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1.5" />
           </button>
 
@@ -95,7 +103,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onShowreelClick }) =
             <div className="w-5 h-5 rounded-full flex items-center justify-center bg-cyan-500/20 text-cyan-400 group-hover:bg-cyan-400 group-hover:text-black transition-colors duration-300">
               <Play className="w-2.5 h-2.5 fill-current ml-0.5" />
             </div>
-            <span>Watch Showreel</span>
+            <span>{hero.showreelLabel || 'Watch Showreel'}</span>
           </button>
         </div>
       </div>

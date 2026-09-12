@@ -61,6 +61,8 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({
         return <Heart className="w-5 h-5 text-cyan-400" />;
       case 'PartyPopper':
         return <PartyPopper className="w-5 h-5 text-cyan-400" />;
+      case 'Sparkles':
+        return <Sparkles className="w-5 h-5 text-cyan-400" />;
       default:
         return <Camera className="w-5 h-5 text-cyan-400" />;
     }
@@ -153,53 +155,57 @@ export const ServiceModal: React.FC<ServiceModalProps> = ({
           </div>
 
           {/* What is Covered Breakdown Grid */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Sparkles className="w-4 h-4 text-cyan-400" />
-              <h4 className="text-base sm:text-lg font-bold text-white font-display">
-                What Covers in this Service
-              </h4>
-            </div>
+          {Array.isArray(service.whatIsCovered) && service.whatIsCovered.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Sparkles className="w-4 h-4 text-cyan-400" />
+                <h4 className="text-base sm:text-lg font-bold text-white font-display">
+                  What Covers in this Service
+                </h4>
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {service.whatIsCovered.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="p-4 rounded-2xl bg-studio-950/70 border border-white/5 hover:border-cyan-500/30 transition-all duration-200 flex items-start gap-3.5"
-                >
-                  <div className="w-7 h-7 rounded-lg bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center shrink-0 mt-0.5">
-                    <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {service.whatIsCovered.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="p-4 rounded-2xl bg-studio-950/70 border border-white/5 hover:border-cyan-500/30 transition-all duration-200 flex items-start gap-3.5"
+                  >
+                    <div className="w-7 h-7 rounded-lg bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center shrink-0 mt-0.5">
+                      <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+                    </div>
+                    <div>
+                      <h5 className="text-sm font-bold text-white leading-snug">
+                        {item.title}
+                      </h5>
+                      <p className="mt-1 text-xs text-slate-400 leading-relaxed font-light">
+                        {item.description}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h5 className="text-sm font-bold text-white leading-snug">
-                      {item.title}
-                    </h5>
-                    <p className="mt-1 text-xs text-slate-400 leading-relaxed font-light">
-                      {item.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Package Deliverables Section */}
-          <div className="p-5 sm:p-6 rounded-2xl bg-cyan-950/30 border border-cyan-400/25">
-            <div className="flex items-center gap-2.5 mb-3">
-              <PackageCheck className="w-5 h-5 text-cyan-400" />
-              <h4 className="text-sm sm:text-base font-bold text-white font-display">
-                Key Deliverables &amp; Output
-              </h4>
+          {Array.isArray(service.deliverables) && service.deliverables.length > 0 && (
+            <div className="p-5 sm:p-6 rounded-2xl bg-cyan-950/30 border border-cyan-400/25">
+              <div className="flex items-center gap-2.5 mb-3">
+                <PackageCheck className="w-5 h-5 text-cyan-400" />
+                <h4 className="text-sm sm:text-base font-bold text-white font-display">
+                  Key Deliverables &amp; Output
+                </h4>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {service.deliverables.map((deliv, i) => (
+                  <div key={i} className="flex items-center gap-2 text-xs sm:text-sm text-cyan-200/90">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
+                    <span>{deliv}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {service.deliverables.map((deliv, i) => (
-                <div key={i} className="flex items-center gap-2 text-xs sm:text-sm text-cyan-200/90">
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
-                  <span>{deliv}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Footer Action Bar */}

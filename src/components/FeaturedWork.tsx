@@ -2,17 +2,24 @@ import React, { useState, useRef } from 'react';
 import { galleryData, galleryCategories } from '../data/galleryData';
 import type { GalleryItem } from '../data/galleryData';
 import { GalleryLightbox } from './GalleryLightbox';
-import { ChevronLeft, ChevronRight, ArrowRight, Sparkles, Maximize2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight, Sparkles, Maximize2, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useSiteContent } from '../sanity/useSiteContent';
 
-export const FeaturedWork: React.FC = () => {
+interface FeaturedWorkProps {
+  onOpenQuote?: () => void;
+}
+
+export const FeaturedWork: React.FC<FeaturedWorkProps> = ({ onOpenQuote }) => {
+  const { content } = useSiteContent();
+  const displayGallery = content.featuredWorks && content.featuredWorks.length > 0 ? content.featuredWorks : galleryData;
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [activeLightboxIndex, setActiveLightboxIndex] = useState<number | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const filteredItems = selectedCategory === 'All'
-    ? galleryData
-    : galleryData.filter((item) => item.category === selectedCategory);
+    ? displayGallery
+    : displayGallery.filter((item) => item.category === selectedCategory);
 
   const handleScroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
@@ -22,26 +29,26 @@ export const FeaturedWork: React.FC = () => {
   };
 
   const handleOpenLightbox = (item: GalleryItem) => {
-    const index = galleryData.findIndex((g) => g.id === item.id);
+    const index = displayGallery.findIndex((g) => g.id === item.id);
     setActiveLightboxIndex(index !== -1 ? index : 0);
   };
 
   const handleNextLightbox = () => {
     if (activeLightboxIndex !== null) {
-      setActiveLightboxIndex((activeLightboxIndex + 1) % galleryData.length);
+      setActiveLightboxIndex((activeLightboxIndex + 1) % displayGallery.length);
     }
   };
 
   const handlePrevLightbox = () => {
     if (activeLightboxIndex !== null) {
       setActiveLightboxIndex(
-        (activeLightboxIndex - 1 + galleryData.length) % galleryData.length
+        (activeLightboxIndex - 1 + displayGallery.length) % displayGallery.length
       );
     }
   };
 
   return (
-    <section id="gallery" className="relative py-28 bg-studio-900/60 overflow-hidden">
+    <section id="gallery" className="scroll-mt-24 relative py-28 bg-studio-900/60 overflow-hidden">
       {/* Background ambient lighting */}
       <div className="absolute -top-32 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -124,8 +131,11 @@ export const FeaturedWork: React.FC = () => {
 
             {/* Top Badges */}
             <div className="absolute top-4 inset-x-4 flex items-center justify-between pointer-events-none">
-              <span className="px-3 py-1 rounded-lg bg-studio-950/80 border border-cyan-400/30 text-cyan-300 text-xs font-semibold backdrop-blur-md">
-                {item.category}
+              <span className="px-3 py-1 rounded-lg bg-studio-950/80 border border-cyan-400/30 text-cyan-300 text-xs font-semibold backdrop-blur-md flex items-center gap-1.5">
+                {(item.category === 'Films' || item.type === 'film') && (
+                  <Play className="w-3 h-3 text-cyan-400 fill-cyan-400" />
+                )}
+                <span>{item.category}</span>
               </span>
               <span className="px-2.5 py-1 rounded-lg bg-studio-950/80 border border-white/15 text-slate-300 text-xs font-mono backdrop-blur-md">
                 {item.year}
@@ -135,8 +145,17 @@ export const FeaturedWork: React.FC = () => {
             {/* Hover Quick Inspect Indicator */}
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
               <div className="px-4 py-2 rounded-full bg-studio-950/90 border border-cyan-400 text-cyan-300 text-xs font-bold flex items-center gap-2 shadow-glow-sm transform scale-90 group-hover:scale-100 transition-transform">
-                <Maximize2 className="w-3.5 h-3.5" />
-                <span>View Details</span>
+                {item.category === 'Films' || item.type === 'film' ? (
+                  <>
+                    <Play className="w-3.5 h-3.5 fill-current" />
+                    <span>Watch Film</span>
+                  </>
+                ) : (
+                  <>
+                    <Maximize2 className="w-3.5 h-3.5" />
+                    <span>View Details</span>
+                  </>
+                )}
               </div>
             </div>
 
@@ -170,10 +189,11 @@ export const FeaturedWork: React.FC = () => {
       {/* Fullscreen Lightbox Modal */}
       {activeLightboxIndex !== null && (
         <GalleryLightbox
-          item={galleryData[activeLightboxIndex]}
+          item={displayGallery[activeLightboxIndex]}
           onClose={() => setActiveLightboxIndex(null)}
           onNext={handleNextLightbox}
           onPrev={handlePrevLightbox}
+          onOpenQuote={onOpenQuote}
         />
       )}
     </section>

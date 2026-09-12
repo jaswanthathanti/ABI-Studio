@@ -17,12 +17,15 @@ import {
   MoveHorizontal,
 } from 'lucide-react';
 import { ServiceModal } from './ServiceModal';
+import { useSiteContent } from '../sanity/useSiteContent';
 
 interface ServicesProps {
   onSelectService: (serviceTitle: string) => void;
 }
 
 export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
+  const { content } = useSiteContent();
+  const displayServices = content.services && content.services.length > 0 ? content.services : servicesData;
   const [selectedServiceForModal, setSelectedServiceForModal] = useState<ServiceItem | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -54,16 +57,31 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
         return <Heart className="w-4 h-4 text-cyan-400" />;
       case 'PartyPopper':
         return <PartyPopper className="w-4 h-4 text-cyan-400" />;
+      case 'Sparkles':
+        return <Sparkles className="w-4 h-4 text-cyan-400" />;
       default:
         return <Camera className="w-4 h-4 text-cyan-400" />;
     }
   };
 
-  // 3 duplicate sets of services for an infinite seamless loop in both directions
-  const rollingServices = [...servicesData, ...servicesData, ...servicesData];
+  // Only activate rolling marquee when more than 3 cards are present
+  const shouldRoll = displayServices.length > 3;
 
-  // Initialize scroll position in the center set on mount
+  // Duplicate 3 sets of services ONLY when rolling is active (>3 cards)
+  const rollingServices = shouldRoll
+    ? [...displayServices, ...displayServices, ...displayServices]
+    : displayServices;
+
+  // Initialize scroll position in the center set on mount ONLY when rolling is active
   useEffect(() => {
+    if (!shouldRoll) {
+      if (containerRef.current) {
+        containerRef.current.scrollLeft = 0;
+        scrollPosRef.current = 0;
+      }
+      return;
+    }
+
     const container = containerRef.current;
     if (!container) return;
 
@@ -78,11 +96,12 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
     initializeScroll();
     const timer = setTimeout(initializeScroll, 100);
     return () => clearTimeout(timer);
-  }, []);
+  }, [shouldRoll, displayServices.length]);
 
-  // Continuous active auto-rolling loop
-  // Rolls all the time EXCEPT when hovering the elements or dragging cards
+  // Continuous active auto-rolling loop ONLY when rolling is active (>3 cards)
   useEffect(() => {
+    if (!shouldRoll) return;
+
     let animationFrameId: number;
     let lastTime = performance.now();
     const scrollSpeed = 52; // pixels per second
@@ -119,10 +138,11 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [shouldRoll]);
 
   // Mouse Drag Handlers for manual rolling left and right
   const handleMouseDown = (e: React.MouseEvent) => {
+    if (!shouldRoll) return;
     const container = containerRef.current;
     if (!container) return;
 
@@ -134,7 +154,7 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDraggingRef.current) return;
+    if (!shouldRoll || !isDraggingRef.current) return;
     const container = containerRef.current;
     if (!container) return;
 
@@ -190,6 +210,7 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
 
   // Touch Swipe Handlers for mobile & tablet
   const handleTouchStart = (e: React.TouchEvent) => {
+    if (!shouldRoll) return;
     const container = containerRef.current;
     if (!container) return;
 
@@ -201,7 +222,7 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDraggingRef.current) return;
+    if (!shouldRoll || !isDraggingRef.current) return;
     const container = containerRef.current;
     if (!container) return;
 
@@ -229,6 +250,7 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
   };
 
   const handleTouchEnd = () => {
+    if (!shouldRoll) return;
     isDraggingRef.current = false;
     setIsDragging(false);
     if (containerRef.current) {
@@ -238,6 +260,7 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
 
   // Manual arrow step buttons
   const scrollManual = (direction: 'left' | 'right') => {
+    if (!shouldRoll) return;
     const container = containerRef.current;
     if (!container) return;
 
@@ -274,7 +297,7 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
   };
 
   return (
-    <section id="services" className="relative pt-12 sm:pt-16 pb-24 sm:pb-28 bg-studio-950 overflow-hidden">
+    <section id="services" className="scroll-mt-24 relative pt-12 sm:pt-16 pb-24 sm:pb-28 bg-studio-950 overflow-hidden">
       {/* Ambient background lighting */}
       <div className="absolute top-1/4 -left-48 w-96 h-96 bg-electric/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 -right-48 w-96 h-96 bg-cyan-400/10 rounded-full blur-[120px] pointer-events-none" />
@@ -297,75 +320,87 @@ export const Services: React.FC<ServicesProps> = ({ onSelectService }) => {
             Everything you need for your special day • Click any service card to view complete coverage &amp; details
           </p>
 
-          {/* Status Bar & Manual Controls */}
-          <div className="mt-6 flex items-center justify-center gap-3 sm:gap-4">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-studio-900/80 border border-white/10 text-xs text-slate-300 backdrop-blur-md shadow-sm">
-              <span
-                className={`w-2 h-2 rounded-full ${
-                  isDragging
-                    ? 'bg-amber-400 animate-pulse'
+          {/* Status Bar & Controls (shown only when rolling marquee is active with >3 cards) */}
+          {shouldRoll && (
+            <div className="mt-6 flex items-center justify-center gap-3 sm:gap-4">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-studio-900/80 border border-white/10 text-xs text-slate-300 backdrop-blur-md shadow-sm">
+                <span
+                  className={`w-2 h-2 rounded-full ${
+                    isDragging
+                      ? 'bg-amber-400 animate-pulse'
+                      : isHovered
+                      ? 'bg-amber-300'
+                      : 'bg-cyan-400 animate-ping'
+                  }`}
+                />
+                <span className="font-medium">
+                  {isDragging
+                    ? 'Dragging Cards'
                     : isHovered
-                    ? 'bg-amber-300'
-                    : 'bg-cyan-400 animate-ping'
-                }`}
-              />
-              <span className="font-medium">
-                {isDragging
-                  ? 'Dragging Cards'
-                  : isHovered
-                  ? 'Paused on Hover'
-                  : 'Actively Rolling'}
-              </span>
-              <span className="text-slate-500">•</span>
-              <span className="text-slate-400 hidden sm:inline">Hover to pause • Drag to roll</span>
-            </div>
+                    ? 'Paused on Hover'
+                    : 'Actively Rolling'}
+                </span>
+                <span className="text-slate-500">•</span>
+                <span className="text-slate-400 hidden sm:inline">Hover to pause • Drag to roll</span>
+              </div>
 
-            {/* Left & Right Step Arrow Buttons */}
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={() => scrollManual('left')}
-                className="w-8 h-8 rounded-full bg-studio-900/80 border border-white/10 hover:border-cyan-400/50 hover:bg-studio-800 text-slate-300 hover:text-cyan-400 flex items-center justify-center transition-all shadow-sm active:scale-90"
-                aria-label="Roll services left"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
+              {/* Left & Right Step Arrow Buttons */}
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => scrollManual('left')}
+                  className="w-8 h-8 rounded-full bg-studio-900/80 border border-white/10 hover:border-cyan-400/50 hover:bg-studio-800 text-slate-300 hover:text-cyan-400 flex items-center justify-center transition-all shadow-sm active:scale-90"
+                  aria-label="Roll services left"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
 
-              <button
-                onClick={() => scrollManual('right')}
-                className="w-8 h-8 rounded-full bg-studio-900/80 border border-white/10 hover:border-cyan-400/50 hover:bg-studio-800 text-slate-300 hover:text-cyan-400 flex items-center justify-center transition-all shadow-sm active:scale-90"
-                aria-label="Roll services right"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
+                <button
+                  onClick={() => scrollManual('right')}
+                  className="w-8 h-8 rounded-full bg-studio-900/80 border border-white/10 hover:border-cyan-400/50 hover:bg-studio-800 text-slate-300 hover:text-cyan-400 flex items-center justify-center transition-all shadow-sm active:scale-90"
+                  aria-label="Roll services right"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
-        {/* Rolling & Draggable Services Track */}
+        {/* Services Track (Rolling Marquee when >3 cards, Centered Grid when <=3 cards) */}
         <div className="relative w-full overflow-hidden py-4">
-          {/* Left & Right Gradient Shadows for smooth edge fade */}
-          <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-40 bg-gradient-to-r from-studio-950 via-studio-950/80 to-transparent z-20 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-40 bg-gradient-to-l from-studio-950 via-studio-950/80 to-transparent z-20 pointer-events-none" />
+          {/* Left & Right Gradient Shadows for smooth edge fade (only when rolling) */}
+          {shouldRoll && (
+            <>
+              <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-40 bg-gradient-to-r from-studio-950 via-studio-950/80 to-transparent z-20 pointer-events-none" />
+              <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-40 bg-gradient-to-l from-studio-950 via-studio-950/80 to-transparent z-20 pointer-events-none" />
+            </>
+          )}
 
-          {/* Continuous active auto-rolling container */}
+          {/* Cards container */}
           <div
             ref={containerRef}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            className="flex items-stretch overflow-x-auto hide-scrollbar cursor-grab active:cursor-grabbing select-none py-2 px-4 will-change-scroll"
-            style={{ WebkitOverflowScrolling: 'touch' }}
+            onMouseEnter={shouldRoll ? handleMouseEnter : undefined}
+            onMouseLeave={shouldRoll ? handleMouseLeave : undefined}
+            onMouseDown={shouldRoll ? handleMouseDown : undefined}
+            onMouseMove={shouldRoll ? handleMouseMove : undefined}
+            onMouseUp={shouldRoll ? handleMouseUp : undefined}
+            onTouchStart={shouldRoll ? handleTouchStart : undefined}
+            onTouchMove={shouldRoll ? handleTouchMove : undefined}
+            onTouchEnd={shouldRoll ? handleTouchEnd : undefined}
+            className={`flex items-stretch py-2 px-4 select-none ${
+              shouldRoll
+                ? 'overflow-x-auto hide-scrollbar cursor-grab active:cursor-grabbing will-change-scroll'
+                : 'justify-center flex-wrap gap-6 max-w-7xl mx-auto'
+            }`}
+            style={shouldRoll ? { WebkitOverflowScrolling: 'touch' } : undefined}
           >
             {rollingServices.map((service, idx) => (
               <div
-                key={`${service.number}-${idx}`}
+                key={service.id ? `${service.id}-${idx}` : `${service.title}-${service.number}-${idx}`}
                 onClick={() => handleCardClick(service)}
-                className="w-[310px] sm:w-[380px] shrink-0 mx-3.5 group relative rounded-3xl bg-studio-900/70 border border-white/10 hover:border-cyan-400/50 backdrop-blur-xl p-5 sm:p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_-15px_rgba(0,168,255,0.25)] flex flex-col justify-between cursor-pointer overflow-hidden select-none"
+                className={`group relative rounded-3xl bg-studio-900/70 border border-white/10 hover:border-cyan-400/50 backdrop-blur-xl p-5 sm:p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_50px_-15px_rgba(0,168,255,0.25)] flex flex-col justify-between cursor-pointer overflow-hidden select-none shrink-0 ${
+                  shouldRoll ? 'w-[310px] sm:w-[380px] mx-3.5' : 'w-full max-w-[360px] sm:w-[360px]'
+                }`}
               >
                 {/* Subtle blue accent corner glow */}
                 <div className="absolute -top-24 -right-24 w-48 h-48 bg-cyan-500/10 group-hover:bg-cyan-500/20 rounded-full blur-2xl transition-all duration-500 pointer-events-none" />

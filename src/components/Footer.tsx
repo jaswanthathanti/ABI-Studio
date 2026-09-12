@@ -1,10 +1,31 @@
 import React from 'react';
 import { ArrowUp, Mail, Phone, MapPin } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useSiteContent } from '../sanity/useSiteContent';
 
 export const Footer: React.FC = () => {
+  const { content } = useSiteContent();
+  const settings = content.siteSettings;
+  const location = useLocation();
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleAnchorClick = (e: React.MouseEvent, targetId: string) => {
+    if (location.pathname === '/') {
+      e.preventDefault();
+      if (targetId === 'hero') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.history.pushState(null, '', '/');
+      } else {
+        const elem = document.getElementById(targetId);
+        if (elem) {
+          elem.scrollIntoView({ behavior: 'smooth' });
+          window.history.pushState(null, '', `#${targetId}`);
+        }
+      }
+    }
   };
 
   return (
@@ -25,21 +46,25 @@ export const Footer: React.FC = () => {
                 <span className="w-2 h-2 rounded-sm bg-cyan-400 animate-pulse" />
               </div>
               <span className="text-xl font-extrabold tracking-tight text-white font-display">
-                LED's &amp;{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric via-cyan-400 to-electric-light">
-                  ABI Studio
-                </span>
+                {settings.studioName || (
+                  <>
+                    LED's &amp;{' '}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric via-cyan-400 to-electric-light">
+                      ABI Studio
+                    </span>
+                  </>
+                )}
               </span>
             </div>
 
             <p className="text-sm text-slate-400 max-w-sm leading-relaxed font-light">
-              Your trusted partner for wedding photography, cinematic films, LED screen rentals, photo albums, and event coverage. Capturing your precious moments with love and artistry.
+              {settings.tagline || 'Your trusted partner for wedding photography, cinematic films, LED screen rentals, photo albums, and event coverage. Capturing your precious moments with love and artistry.'}
             </p>
 
             {/* Social Icons (SVG) */}
             <div className="pt-2 flex items-center gap-3">
               <a
-                href="https://instagram.com"
+                href={settings.instagramUrl || 'https://instagram.com'}
                 target="_blank"
                 rel="noreferrer"
                 className="w-9 h-9 rounded-full bg-studio-900 border border-white/10 flex items-center justify-center text-slate-400 hover:text-cyan-400 hover:border-cyan-400 hover:shadow-glow-sm transition-all"
@@ -50,7 +75,7 @@ export const Footer: React.FC = () => {
                 </svg>
               </a>
               <a
-                href="https://youtube.com"
+                href={settings.youtubeUrl || 'https://youtube.com'}
                 target="_blank"
                 rel="noreferrer"
                 className="w-9 h-9 rounded-full bg-studio-900 border border-white/10 flex items-center justify-center text-slate-400 hover:text-cyan-400 hover:border-cyan-400 hover:shadow-glow-sm transition-all"
@@ -61,7 +86,7 @@ export const Footer: React.FC = () => {
                 </svg>
               </a>
               <a
-                href="https://facebook.com"
+                href={settings.facebookUrl || 'https://facebook.com'}
                 target="_blank"
                 rel="noreferrer"
                 className="w-9 h-9 rounded-full bg-studio-900 border border-white/10 flex items-center justify-center text-slate-400 hover:text-cyan-400 hover:border-cyan-400 hover:shadow-glow-sm transition-all"
@@ -72,7 +97,7 @@ export const Footer: React.FC = () => {
                 </svg>
               </a>
               <a
-                href="https://linkedin.com"
+                href={settings.linkedinUrl || 'https://linkedin.com'}
                 target="_blank"
                 rel="noreferrer"
                 className="w-9 h-9 rounded-full bg-studio-900 border border-white/10 flex items-center justify-center text-slate-400 hover:text-cyan-400 hover:border-cyan-400 hover:shadow-glow-sm transition-all"
@@ -91,12 +116,12 @@ export const Footer: React.FC = () => {
               Navigation
             </h4>
             <ul className="space-y-2.5 text-sm">
-              <li><Link to="/" className="hover:text-cyan-400 transition-colors">Home</Link></li>
-              <li><a href="/#services" className="hover:text-cyan-400 transition-colors">Services</a></li>
+              <li><Link to="/" onClick={(e) => handleAnchorClick(e, 'hero')} className="hover:text-cyan-400 transition-colors">Home</Link></li>
+              <li><Link to="/#services" onClick={(e) => handleAnchorClick(e, 'services')} className="hover:text-cyan-400 transition-colors">Services</Link></li>
               <li><Link to="/gallery" className="hover:text-cyan-400 transition-colors">Gallery</Link></li>
-              <li><a href="/#about" className="hover:text-cyan-400 transition-colors">About</a></li>
-              <li><a href="/#faq" className="hover:text-cyan-400 transition-colors">FAQ</a></li>
-              <li><a href="/#cta" className="hover:text-cyan-400 transition-colors">Contact</a></li>
+              <li><Link to="/#about" onClick={(e) => handleAnchorClick(e, 'about')} className="hover:text-cyan-400 transition-colors">About</Link></li>
+              <li><Link to="/#faq" onClick={(e) => handleAnchorClick(e, 'faq')} className="hover:text-cyan-400 transition-colors">FAQ</Link></li>
+              <li><Link to="/#cta" onClick={(e) => handleAnchorClick(e, 'cta')} className="hover:text-cyan-400 transition-colors">Contact</Link></li>
             </ul>
           </div>
 
@@ -106,12 +131,12 @@ export const Footer: React.FC = () => {
               Our Services
             </h4>
             <ul className="space-y-2.5 text-sm">
-              <li><a href="/#services" className="hover:text-cyan-400 transition-colors">Wedding Photography</a></li>
-              <li><a href="/#services" className="hover:text-cyan-400 transition-colors">Wedding Films</a></li>
-              <li><a href="/#services" className="hover:text-cyan-400 transition-colors">LED Screen Rentals</a></li>
-              <li><a href="/#services" className="hover:text-cyan-400 transition-colors">Photo Albums</a></li>
-              <li><a href="/#services" className="hover:text-cyan-400 transition-colors">Pre-Wedding Shoots</a></li>
-              <li><a href="/#services" className="hover:text-cyan-400 transition-colors">Event Coverage</a></li>
+              <li><Link to="/#services" onClick={(e) => handleAnchorClick(e, 'services')} className="hover:text-cyan-400 transition-colors">Wedding Photography</Link></li>
+              <li><Link to="/#services" onClick={(e) => handleAnchorClick(e, 'services')} className="hover:text-cyan-400 transition-colors">Wedding Films</Link></li>
+              <li><Link to="/#services" onClick={(e) => handleAnchorClick(e, 'services')} className="hover:text-cyan-400 transition-colors">LED Screen Rentals</Link></li>
+              <li><Link to="/#services" onClick={(e) => handleAnchorClick(e, 'services')} className="hover:text-cyan-400 transition-colors">Photo Albums</Link></li>
+              <li><Link to="/#services" onClick={(e) => handleAnchorClick(e, 'services')} className="hover:text-cyan-400 transition-colors">Pre-Wedding Shoots</Link></li>
+              <li><Link to="/#services" onClick={(e) => handleAnchorClick(e, 'services')} className="hover:text-cyan-400 transition-colors">Event Coverage</Link></li>
             </ul>
           </div>
 
@@ -123,15 +148,17 @@ export const Footer: React.FC = () => {
             <div className="space-y-3 text-xs sm:text-sm text-slate-400 font-light">
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-                <span>ABI Studio, Creative District</span>
+                <span>{settings.address || 'ABI Studio, Creative District'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-cyan-400 shrink-0" />
-                <span className="text-slate-300">contact@abistudio.com</span>
+                <span className="text-slate-300">{settings.email || 'contact@abistudio.com'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-cyan-400 shrink-0" />
-                <a href="tel:+919440427791" className="text-slate-300 hover:text-cyan-400 transition-colors">+91 94404 27791</a>
+                <a href={`tel:${settings.phone || '+919440427791'}`} className="text-slate-300 hover:text-cyan-400 transition-colors">
+                  {settings.phone || '+91 94404 27791'}
+                </a>
               </div>
             </div>
           </div>

@@ -6,6 +6,7 @@ export interface GalleryPageItem {
   category: 'Weddings' | 'Pre-Wedding' | 'Events' | 'LED Setups' | 'Albums' | 'Films';
   image: string;
   type: 'photo' | 'film';
+  videoUrl?: string;
   description?: string;
 }
 

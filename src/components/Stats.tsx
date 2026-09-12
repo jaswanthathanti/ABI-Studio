@@ -1,8 +1,12 @@
 import React from 'react';
 import { Heart, Users, Clock, Star } from 'lucide-react';
 import { statsData } from '../data/statsData';
+import { useSiteContent } from '../sanity/useSiteContent';
 
 export const Stats: React.FC = () => {
+  const { content } = useSiteContent();
+  const displayStats = content.stats && content.stats.length > 0 ? content.stats : statsData;
+
   const getIcon = (name: string) => {
     switch (name) {
       case 'Heart':
@@ -21,7 +25,7 @@ export const Stats: React.FC = () => {
   return (
     <div className="w-full max-w-6xl mx-auto px-4 sm:px-6">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-0 divide-y md:divide-y-0 md:divide-x divide-white/10 rounded-2xl bg-studio-900/40 border border-white/5 backdrop-blur-md p-4 sm:p-6 shadow-2xl">
-        {statsData.map((stat, idx) => (
+        {displayStats.map((stat, idx) => (
           <div
             key={stat.id}
             className={`flex flex-col items-center text-center p-3 sm:p-4 group transition-transform duration-300 hover:-translate-y-1 ${

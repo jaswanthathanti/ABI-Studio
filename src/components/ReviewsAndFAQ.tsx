@@ -13,12 +13,17 @@ import {
 import { testimonialsData } from '../data/testimonialsData';
 import { faqData, faqCategories } from '../data/faqData';
 import type { FAQItem } from '../data/faqData';
+import { useSiteContent } from '../sanity/useSiteContent';
 
 interface ReviewsAndFAQProps {
   onOpenQuote?: () => void;
 }
 
 export const ReviewsAndFAQ: React.FC<ReviewsAndFAQProps> = ({ onOpenQuote }) => {
+  const { content } = useSiteContent();
+  const displayTestimonials = content.testimonials && content.testimonials.length > 0 ? content.testimonials : testimonialsData;
+  const displayFaqs = content.faqs && content.faqs.length > 0 ? content.faqs : faqData;
+
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [openIds, setOpenIds] = useState<string[]>(['faq-1']);
 
@@ -30,11 +35,11 @@ export const ReviewsAndFAQ: React.FC<ReviewsAndFAQProps> = ({ onOpenQuote }) => 
 
   const filteredFaqs =
     activeCategory === 'all'
-      ? faqData
-      : faqData.filter((item) => item.category === activeCategory);
+      ? displayFaqs
+      : displayFaqs.filter((item) => item.category === activeCategory);
 
   // Duplicate testimonials for continuous seamless infinite loop
-  const rollingTestimonials = [...testimonialsData, ...testimonialsData];
+  const rollingTestimonials = [...displayTestimonials, ...displayTestimonials];
 
   return (
     <section
@@ -43,7 +48,6 @@ export const ReviewsAndFAQ: React.FC<ReviewsAndFAQProps> = ({ onOpenQuote }) => 
     >
       {/* Anchors for navbar / footer links */}
       <div id="reviews" className="absolute -top-24 pointer-events-none" />
-      <div id="faq" className="absolute top-[45%] pointer-events-none" />
 
       {/* Ambient background lighting */}
       <div className="absolute top-1/4 -right-36 w-96 h-96 bg-electric/10 rounded-full blur-[130px] pointer-events-none" />
@@ -153,7 +157,7 @@ export const ReviewsAndFAQ: React.FC<ReviewsAndFAQProps> = ({ onOpenQuote }) => 
       {/* ================================================================ */}
       {/* PART 2: FREQUENTLY ASKED QUESTIONS                               */}
       {/* ================================================================ */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div id="faq" className="scroll-mt-24 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* FAQ Header */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
           <h3 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white font-display">
