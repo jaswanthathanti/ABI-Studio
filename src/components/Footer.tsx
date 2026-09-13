@@ -117,7 +117,7 @@ export const Footer: React.FC = () => {
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li><Link to="/" onClick={(e) => handleAnchorClick(e, 'hero')} className="hover:text-cyan-400 transition-colors">Home</Link></li>
-              <li><Link to="/#services" onClick={(e) => handleAnchorClick(e, 'services')} className="hover:text-cyan-400 transition-colors">Services</Link></li>
+              <li><Link to="/services" className="hover:text-cyan-400 transition-colors">Services</Link></li>
               <li><Link to="/gallery" className="hover:text-cyan-400 transition-colors">Gallery</Link></li>
               <li><Link to="/#about" onClick={(e) => handleAnchorClick(e, 'about')} className="hover:text-cyan-400 transition-colors">About</Link></li>
               <li><Link to="/#faq" onClick={(e) => handleAnchorClick(e, 'faq')} className="hover:text-cyan-400 transition-colors">FAQ</Link></li>
@@ -131,12 +131,12 @@ export const Footer: React.FC = () => {
               Our Services
             </h4>
             <ul className="space-y-2.5 text-sm">
-              <li><Link to="/#services" onClick={(e) => handleAnchorClick(e, 'services')} className="hover:text-cyan-400 transition-colors">Wedding Photography</Link></li>
-              <li><Link to="/#services" onClick={(e) => handleAnchorClick(e, 'services')} className="hover:text-cyan-400 transition-colors">Wedding Films</Link></li>
-              <li><Link to="/#services" onClick={(e) => handleAnchorClick(e, 'services')} className="hover:text-cyan-400 transition-colors">LED Screen Rentals</Link></li>
-              <li><Link to="/#services" onClick={(e) => handleAnchorClick(e, 'services')} className="hover:text-cyan-400 transition-colors">Photo Albums</Link></li>
-              <li><Link to="/#services" onClick={(e) => handleAnchorClick(e, 'services')} className="hover:text-cyan-400 transition-colors">Pre-Wedding Shoots</Link></li>
-              <li><Link to="/#services" onClick={(e) => handleAnchorClick(e, 'services')} className="hover:text-cyan-400 transition-colors">Event Coverage</Link></li>
+              <li><Link to="/services" className="hover:text-cyan-400 transition-colors">Wedding Photography</Link></li>
+              <li><Link to="/services" className="hover:text-cyan-400 transition-colors">Wedding Films</Link></li>
+              <li><Link to="/services" className="hover:text-cyan-400 transition-colors">LED Screen Rentals</Link></li>
+              <li><Link to="/services" className="hover:text-cyan-400 transition-colors">Photo Albums</Link></li>
+              <li><Link to="/services" className="hover:text-cyan-400 transition-colors">Pre-Wedding Shoots</Link></li>
+              <li><Link to="/services" className="hover:text-cyan-400 transition-colors">Event Coverage</Link></li>
             </ul>
           </div>
 

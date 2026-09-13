@@ -15,7 +15,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { label: 'Home', targetId: 'hero' },
-  { label: 'Services', targetId: 'services' },
+  { label: 'Services', href: '/services' },
   { label: 'Gallery', href: '/gallery' },
   { label: 'About', targetId: 'about' },
   { label: 'FAQ', targetId: 'faq' },
@@ -41,8 +41,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenQuote }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Dynamic ScrollSpy tracking active section on Home Page or Gallery
+  // Dynamic ScrollSpy tracking active section on Home Page, Services, or Gallery
   useEffect(() => {
+    if (location.pathname === '/services') {
+      setActiveSection('Services');
+      return;
+    }
+
     if (location.pathname === '/gallery') {
       setActiveSection('Gallery');
       return;

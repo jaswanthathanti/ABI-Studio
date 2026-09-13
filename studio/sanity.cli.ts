@@ -1,6 +1,7 @@
 import { defineCliConfig } from 'sanity/cli'
 
 export default defineCliConfig({
+  studioHost: 'abistudio',
   api: {
     projectId: process.env.SANITY_STUDIO_PROJECT_ID || process.env.VITE_SANITY_PROJECT_ID || '2d7jnmnf',
     dataset: process.env.SANITY_STUDIO_DATASET || process.env.VITE_SANITY_DATASET || 'production',

@@ -7,6 +7,7 @@ import { ShowreelModal } from './components/ShowreelModal';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { HomePage } from './pages/HomePage';
 import { GalleryPage } from './pages/GalleryPage';
+import { ServicesPage } from './pages/ServicesPage';
 import { QuotePage } from './pages/QuotePage';
 import { SiteContentProvider } from './sanity/useSiteContent';
 import { ScrollManager } from './components/ScrollManager';
@@ -50,6 +51,10 @@ export function App() {
                 onShowreelClick={() => setIsShowreelOpen(true)}
               />
             }
+          />
+          <Route
+            path="/services"
+            element={<ServicesPage onOpenQuote={handleOpenQuote} />}
           />
           <Route
             path="/gallery"
