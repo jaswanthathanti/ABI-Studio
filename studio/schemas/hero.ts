@@ -40,6 +40,12 @@ export const hero = defineType({
       initialValue: 'View Our Work',
     }),
     defineField({
+      name: 'contactLabel',
+      title: 'Contact Button Label',
+      type: 'string',
+      initialValue: 'Contact Us',
+    }),
+    defineField({
       name: 'showreelLabel',
       title: 'Showreel Button Label',
       type: 'string',

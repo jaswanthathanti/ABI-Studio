@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Play, ChevronDown } from 'lucide-react';
+import { ArrowRight, Phone, ChevronDown } from 'lucide-react';
 import { getAssetUrl } from '../utils/assetHelper';
 import { useSiteContent } from '../sanity/useSiteContent';
 import { urlForImage } from '../sanity/client';
 
 interface HeroProps {
   onExploreClick: () => void;
-  onShowreelClick: () => void;
+  onContactClick?: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onExploreClick, onShowreelClick }) => {
+export const Hero: React.FC<HeroProps> = ({
+  onExploreClick,
+  onContactClick,
+}) => {
   const { content } = useSiteContent();
   const hero = content.hero;
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -28,6 +31,18 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onShowreelClick }) =
   const heroBackgroundUrl = hero.backgroundImage
     ? urlForImage(hero.backgroundImage, getAssetUrl('assets/hero-studio-clean.jpg'))
     : getAssetUrl('assets/hero-studio-clean.jpg');
+
+  const handleContactClick = () => {
+    if (onContactClick) {
+      onContactClick();
+    } else {
+      const ctaElem = document.getElementById('cta');
+      if (ctaElem) {
+        ctaElem.scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState(null, '', '#cta');
+      }
+    }
+  };
 
   return (
     <div
@@ -95,15 +110,15 @@ export const Hero: React.FC<HeroProps> = ({ onExploreClick, onShowreelClick }) =
             <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1.5" />
           </button>
 
-          {/* Secondary Button */}
+          {/* Secondary Button - Contact Us */}
           <button
-            onClick={onShowreelClick}
-            className="group px-6 py-3 rounded-full text-sm sm:text-base font-semibold text-slate-200 bg-studio-950/60 hover:bg-studio-900/80 border border-cyan-500/30 hover:border-cyan-400/80 backdrop-blur-md shadow-sm hover:shadow-glow-sm transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] flex items-center gap-2.5"
+            onClick={handleContactClick}
+            className="group px-6 py-3 rounded-full text-sm sm:text-base font-semibold text-slate-200 bg-studio-950/60 hover:bg-studio-900/80 border border-cyan-500/30 hover:border-cyan-400/80 backdrop-blur-md shadow-sm hover:shadow-glow-sm transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] flex items-center gap-2.5 cursor-pointer"
           >
             <div className="w-5 h-5 rounded-full flex items-center justify-center bg-cyan-500/20 text-cyan-400 group-hover:bg-cyan-400 group-hover:text-black transition-colors duration-300">
-              <Play className="w-2.5 h-2.5 fill-current ml-0.5" />
+              <Phone className="w-2.5 h-2.5 transition-transform duration-300 group-hover:rotate-12" />
             </div>
-            <span>{hero.showreelLabel || 'Watch Showreel'}</span>
+            <span>{hero.contactLabel || 'Contact Us'}</span>
           </button>
         </div>
       </div>

@@ -3,7 +3,6 @@ import { Routes, Route, useLocation, useSearchParams } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { QuoteModal } from './components/QuoteModal';
-import { ShowreelModal } from './components/ShowreelModal';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { HomePage } from './pages/HomePage';
 import { GalleryPage } from './pages/GalleryPage';
@@ -14,7 +13,6 @@ import { ScrollManager } from './components/ScrollManager';
 
 export function App() {
   const [isQuoteOpen, setIsQuoteOpen] = useState(false);
-  const [isShowreelOpen, setIsShowreelOpen] = useState(false);
   const [quoteInitialService, setQuoteInitialService] = useState<string | undefined>(undefined);
 
   const location = useLocation();
@@ -45,12 +43,7 @@ export function App() {
         <Routes>
           <Route
             path="/"
-            element={
-              <HomePage
-                onOpenQuote={handleOpenQuote}
-                onShowreelClick={() => setIsShowreelOpen(true)}
-              />
-            }
+            element={<HomePage onOpenQuote={handleOpenQuote} />}
           />
           <Route
             path="/services"
@@ -72,13 +65,6 @@ export function App() {
             isOpen={isQuoteOpen}
             onClose={() => setIsQuoteOpen(false)}
             initialService={quoteInitialService}
-          />
-        )}
-
-        {isShowreelOpen && (
-          <ShowreelModal
-            isOpen={isShowreelOpen}
-            onClose={() => setIsShowreelOpen(false)}
           />
         )}
 

@@ -9,14 +9,23 @@ import { FinalCTA } from '../components/FinalCTA';
 
 interface HomePageProps {
   onOpenQuote: (serviceName?: string) => void;
-  onShowreelClick: () => void;
 }
 
-export const HomePage: React.FC<HomePageProps> = ({ onOpenQuote, onShowreelClick }) => {
+export const HomePage: React.FC<HomePageProps> = ({ onOpenQuote }) => {
   const handleExploreClick = () => {
     const galleryElem = document.getElementById('gallery');
     if (galleryElem) {
       galleryElem.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleContactClick = () => {
+    const ctaElem = document.getElementById('cta');
+    if (ctaElem) {
+      ctaElem.scrollIntoView({ behavior: 'smooth' });
+      window.history.pushState(null, '', '#cta');
+    } else {
+      onOpenQuote();
     }
   };
 
@@ -25,7 +34,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenQuote, onShowreelClick
       {/* Hero Section */}
       <Hero
         onExploreClick={handleExploreClick}
-        onShowreelClick={onShowreelClick}
+        onContactClick={handleContactClick}
       />
 
       {/* Trust & Key Stats Section */}

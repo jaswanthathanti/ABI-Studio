@@ -36,6 +36,7 @@ export interface SanityHeroContent {
   titleHighlight?: string;
   subtitle?: string;
   viewWorkLabel?: string;
+  contactLabel?: string;
   showreelLabel?: string;
   showreelVideoUrl?: string;
   backgroundImage?: SanityImageRef;
