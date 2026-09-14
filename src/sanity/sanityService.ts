@@ -22,7 +22,7 @@ export const staticFailsafeContent: DynamicSiteContent = {
     tagline: 'Wedding Photography | Cinematic Films | LED Screens | Photo Albums',
     phone: '+91 94404 27791',
     whatsapp: '+91 94404 27791',
-    email: 'chanduathanti@gmail.com',
+    email: 'athantichandu@gmail.com',
     address: 'ABI Studio, Creative District',
     instagramUrl: 'https://instagram.com',
     youtubeUrl: 'https://youtube.com',
