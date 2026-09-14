@@ -296,7 +296,7 @@ The Studio defines 9 schemas in `studio/schemas/`. Below is the complete field s
   - `tagline` (`text`): Brand summary used in footer & SEO.
   - `phone` (`string`): Display phone number (e.g. `+91 94404 27791`).
   - `whatsapp` (`string`): Digits-only WhatsApp number for direct click-to-chat (`919440427791`).
-  - `email` (`string`): Primary contact email (`contact@abistudio.com`).
+  - `email` (`string`): Primary contact email (`chanduathanti@gmail.com`).
   - `address` (`string`): Physical studio location.
   - `instagramUrl` (`url`): Instagram profile link.
   - `youtubeUrl` (`url`): YouTube channel link.

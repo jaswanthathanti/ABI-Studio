@@ -38,7 +38,7 @@ export const siteSettings = defineType({
       name: 'email',
       title: 'Official Email Address',
       type: 'string',
-      initialValue: 'contact@abistudio.com',
+      initialValue: 'chanduathanti@gmail.com',
     }),
     defineField({
       name: 'address',
